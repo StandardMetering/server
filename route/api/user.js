@@ -4,7 +4,7 @@ let userModel = require( '../../model/user' );
 let respondToRequest = require( '../util/respondToRequest' );
 
 router.get( '/info', function ( req, res ) {
-
+  
   respondToRequest.withNetworkObject( req, res, res.locals.userNetworkObject );
 
 } );

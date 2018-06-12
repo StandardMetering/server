@@ -6,6 +6,8 @@ module.exports.withNetworkObject = function( req, res, networkDataObject ) {
     data: networkDataObject
   };
 
+  console.log( "Sending Response: ", networkObject );
+  
   res.setHeader('content-type', 'application/json');
   res.end( JSON.stringify( networkObject ) );
 

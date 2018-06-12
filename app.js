@@ -31,6 +31,7 @@ app.use( express.static( path.join( __dirname, 'public' ) ) );
 app.use( businessMiddleware );
 
 // Connect to the database
+mongoose.Promise  = global.Promise;
 mongoose.connect( 'mongodb://localhost/standard_metering_db' ).then( () => {
 
   console.log( 'Connected to database.' );
