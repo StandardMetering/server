@@ -1,7 +1,7 @@
-let CLIENT_ID = "438678561117-b8d1tn6ftgjio5751dmo79olp1q86e56.apps.googleusercontent.com";
+let WEB_CLIENT_ID = "438678561117-b8d1tn6ftgjio5751dmo79olp1q86e56.apps.googleusercontent.com";
 let IOS_CLIENT_ID = "438678561117-1ve98ie1ob3ogvmcr8dqtt8ke66boc3c.apps.googleusercontent.com";
 const { OAuth2Client } = require( 'google-auth-library' );
-const client = new OAuth2Client( CLIENT_ID );
+const client = new OAuth2Client( WEB_CLIENT_ID );
 let respondToRequest = require( '../route/util/respondToRequest' );
 
 module.exports = accessTokenAuthentication;
@@ -24,6 +24,7 @@ function accessTokenAuthentication() {
         message: "Google access token required",
         data: null
       } );
+      return;
     }
     
     console.log( "Token: " );
@@ -36,7 +37,7 @@ function accessTokenAuthentication() {
       // Get Google ticket info
       const ticket = await client.verifyIdToken( {
         idToken: token,
-        audience: [ CLIENT_ID, IOS_CLIENT_ID ]
+        audience: [ WEB_CLIENT_ID, IOS_CLIENT_ID ]
       } );
       
       console.log( "User: " + ticket.getPayload().email );
@@ -61,22 +62,22 @@ function accessTokenAuthentication() {
         
         // Log error
         console.log( error );
-        
+
+        // Check for exp error
         if ( error.message.includes( "Token used too late" ) ) {
           next( {
             code: respondToRequest.errorCodes.tokenExpired,
             message: "Token expired",
             data: token
           } );
+          return;
         }
-        
-        // Send 401
+
         next( {
           code: respondToRequest.errorCodes.tokenGeneral,
           message: "Unable to authenticate user",
           data: token
-        } )
-        
-      } );
-  };
-}
+        } );
+      } ); // verify.catch()
+  }; // resulting middleware function
+} // accessTokenAuthentication

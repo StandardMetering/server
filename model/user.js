@@ -29,21 +29,26 @@ let User = module.exports = mongoose.model( 'user' );
 module.exports.createNewUserRequestFromGoogleAccessToken = function ( googleAccessToken, callback ) {
 
   // Todo: execute database create
-  callback( {message: "Yea there's an error"}, {display_name:"Swag Monster", google_access_token: googleAccessToken} );
+  callback( { message: "Yea there's an error" }, {
+    google_id: "123456789",
+    display_name: "Swag Monster",
+    google_access_token: googleAccessToken,
+    admin_rights: false,
+    dev: false
+  } );
 };
 
 module.exports.getDatabaseObjectFromGoogleID = function ( userGoogleId, callback ) {
-  console.log( "User google id: " + userGoogleId );
+  console.log( "DB fetch user with google_id: " + userGoogleId );
   User.findOne( { google_id: userGoogleId }, callback );
 };
 
 module.exports.getNetworkDataObjectFromDatabaseObject = function ( userDatabaseObject ) {
-  
+
   if ( userDatabaseObject === null ) {
-    console.log( "User Database object null" );
     return null
   }
-  
+
   return {
     google_id: userDatabaseObject.google_id,
     display_name: userDatabaseObject.display_name,
