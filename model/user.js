@@ -33,10 +33,17 @@ module.exports.createNewUserRequestFromGoogleAccessToken = function ( googleAcce
 };
 
 module.exports.getDatabaseObjectFromGoogleID = function ( userGoogleId, callback ) {
+  console.log( "User google id: " + userGoogleId );
   User.findOne( { google_id: userGoogleId }, callback );
 };
 
 module.exports.getNetworkDataObjectFromDatabaseObject = function ( userDatabaseObject ) {
+  
+  if ( userDatabaseObject === null ) {
+    console.log( "User Database object null" );
+    return null
+  }
+  
   return {
     google_id: userDatabaseObject.google_id,
     display_name: userDatabaseObject.display_name,
@@ -51,6 +58,7 @@ module.exports.getNetworkDataObjectFromGoogleID = function ( userGoogleId, callb
 
     if ( error ) {
       callback( error, null );
+      return;
     }
 
     callback( null, module.exports.getNetworkDataObjectFromDatabaseObject( data ) );

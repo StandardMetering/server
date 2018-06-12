@@ -5,7 +5,7 @@ let respondToRequest = require( '../util/respondToRequest' );
 
 router.get( '/info', function ( req, res ) {
   
-  respondToRequest.withNetworkObject( req, res, res.locals.userNetworkObject );
+  respondToRequest.withNetworkObject( req, res, "user", res.locals.userNetworkObject );
 
 } );
 
