@@ -72,3 +72,5 @@ let InstallSchema = mongoose.Schema( 'install', {
 
   notes: String
 } );
+
+let Install = module.exports = mongoose.model( 'install' );

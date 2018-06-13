@@ -1,4 +1,4 @@
-let WEB_CLIENT_ID = "438678561117-b8d1tn6ftgjio5751dmo79olp1q86e56.apps.googleusercontent.com";
+let WEB_CLIENT_ID = "438678561117-04vl6pt423vtr7dkmg5jc4mfbknna387.apps.googleusercontent.com";
 let IOS_CLIENT_ID = "438678561117-1ve98ie1ob3ogvmcr8dqtt8ke66boc3c.apps.googleusercontent.com";
 const { OAuth2Client } = require( 'google-auth-library' );
 const client = new OAuth2Client( WEB_CLIENT_ID );
@@ -41,6 +41,7 @@ function accessTokenAuthentication() {
       } );
       
       console.log( "User: " + ticket.getPayload().email );
+      res.locals.googleTokenPayload = ticket.getPayload();
       res.locals.userNetworkObject = {
         google_id: ticket.getPayload().sub,
         display_name: ticket.getPayload().email,

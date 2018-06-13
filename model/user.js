@@ -1,6 +1,7 @@
 let mongoose = require( 'mongoose' );
+let pendingUser = require( './pendingUser' );
 
-let UserSchema = mongoose.model( 'user', {
+let UserSchema = mongoose.Schema( {
 
   google_id: {
     type: String,
@@ -24,18 +25,27 @@ let UserSchema = mongoose.model( 'user', {
 
 } );
 
-let User = module.exports = mongoose.model( 'user' );
+let User = module.exports = mongoose.model( 'user', UserSchema );
 
-module.exports.createNewUserRequestFromGoogleAccessToken = function ( googleAccessToken, callback ) {
+module.exports.createNewPendingUser = function ( googleID, email, callback ) {
+  pendingUser.addPendingUser( googleID, email, callback );
+};
 
-  // Todo: execute database create
-  callback( { message: "Yea there's an error" }, {
-    google_id: "123456789",
-    display_name: "Swag Monster",
-    google_access_token: googleAccessToken,
-    admin_rights: false,
-    dev: false
+module.exports.acceptPendingUser = function( userInfo, callback ) {
+  pendingUser.removePendingUser( userInfo.google_id, function( error ) {
+
+    if( error ) {
+      callback( error );
+      return;
+    }
+
+    module.exports.createNew( userInfo, callback );
+
   } );
+};
+
+module.exports.createNew = function( userInfo, callback ) {
+  User.create(userInfo, callback)
 };
 
 module.exports.getDatabaseObjectFromGoogleID = function ( userGoogleId, callback ) {

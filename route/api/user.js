@@ -1,6 +1,7 @@
 let express = require( 'express' );
 let router = express.Router();
 let userModel = require( '../../model/user' );
+let pendingUserModel = require( '../../model/pendingUser' );
 let respondToRequest = require( '../util/respondToRequest' );
 
 router.get( '/info', function ( req, res ) {
@@ -9,17 +10,24 @@ router.get( '/info', function ( req, res ) {
 
 } );
 
-router.post( '/', function ( req, res, next ) {
+router.get( '/pending', function( req, res ) {
 
-  userModel.createNewUserRequestFromGoogleAccessToken( res.locals.googleAccessToken, function( error, data ) {
+  pendingUserModel.getPendingUsers( function( error, data ) {
 
-    if ( error ) {
+    if( error ) {
       next( error );
       return;
     }
 
-    respondToRequest.withNetworkObject( req, res, data );
+    respondToRequest.withNetworkObject( req, res, "array_pending", data );
   } );
+
+} );
+
+router.post( '/', function ( req, res, next ) {
+
+
+
 } );
 
 module.exports = router;
