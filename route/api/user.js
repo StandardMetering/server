@@ -26,8 +26,18 @@ router.get( '/pending', function( req, res ) {
 
 router.post( '/', function ( req, res, next ) {
 
+  let body = req.body;
 
+  userModel.acceptPendingUser( body, function( error, data ) {
 
+    if( error ) {
+      next( error );
+      return;
+    }
+
+    respondToRequest.withNetworkObject( req, res, "user", data )
+
+  } );
 } );
 
 module.exports = router;

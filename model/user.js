@@ -39,13 +39,43 @@ module.exports.acceptPendingUser = function( userInfo, callback ) {
       return;
     }
 
-    module.exports.createNew( userInfo, callback );
+    module.exports.upsert( userInfo, callback );
 
   } );
 };
 
 module.exports.createNew = function( userInfo, callback ) {
   User.create(userInfo, callback)
+};
+
+module.exports.upsert = function( userInfo, callback ) {
+
+  let query = {
+    google_id: userInfo.google_id
+  };
+
+  let update = {
+    display_name: userInfo.display_name,
+    admin_rights: userInfo.admin_rights,
+    dev: userInfo.dev
+  };
+
+  let options = {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true
+  };
+
+  User.findOneAndUpdate(query, update, options, function( error, data ) {
+
+    if( error ) {
+      callback( error );
+      return;
+    }
+
+    callback( null, module.exports.getNetworkDataObjectFromDatabaseObject( data ) );
+
+  } );
 };
 
 module.exports.getDatabaseObjectFromGoogleID = function ( userGoogleId, callback ) {
