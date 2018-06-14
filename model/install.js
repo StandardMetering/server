@@ -19,6 +19,16 @@ let InstallSchema = mongoose.Schema( 'install', {
     ]
   },
 
+  creator: String,
+  worked_on: [String],
+
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    zip: String
+  },
+
   // Branching Element
   able_to_complete: Boolean,
 
