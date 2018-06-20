@@ -1,6 +1,7 @@
 let mongoose = require( 'mongoose' );
+let respondToRequest = require( '../route/util/respondToRequest' );
 
-let InstallSchema = mongoose.Schema( 'install', {
+let InstallSchema = mongoose.Schema( {
 
   install_num: {
     type: String,
@@ -20,7 +21,7 @@ let InstallSchema = mongoose.Schema( 'install', {
   },
 
   creator: String,
-  worked_on: [String],
+  worked_on: [ String ],
 
   address: {
     street: String,
@@ -45,7 +46,7 @@ let InstallSchema = mongoose.Schema( 'install', {
 
   // Branching Element
   job_type: {
-    value: String,
+    type: String,
     enum: [ 'mc', 'rf', 'rp' ]
   },
 
@@ -83,4 +84,22 @@ let InstallSchema = mongoose.Schema( 'install', {
   notes: String
 } );
 
-let Install = module.exports = mongoose.model( 'install' );
+let Install = module.exports = mongoose.model( 'install', InstallSchema );
+
+module.exports.createNewIntstall = function ( googleId, newInstallData, callback ) {
+
+  if ( !newInstallData.install_num ) {
+    callback( {
+      code: respondToRequest.errorCodes.dataMalformed,
+      message: "Need at least a creating user and install number to create new install.",
+      data: newInstallData
+    } );
+    return;
+  }
+
+  newInstallData[ "creator" ] = googleId;
+  newInstallData[ "worked_on" ] = [ googleId ];
+
+  Install.create( newInstallData, callback );
+
+};

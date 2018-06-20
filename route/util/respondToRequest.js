@@ -20,7 +20,9 @@ let errorCodes = {
   tokenMalformed: 602,
   tokenDoesNotMatchAnyUser: 603,
   tokenExpired: 604,
-  tokenGeneral: 605
+  tokenGeneral: 605,
+
+  dataMalformed: 610
 };
 
 module.exports.errorCodes = errorCodes;
