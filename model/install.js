@@ -86,7 +86,7 @@ let InstallSchema = mongoose.Schema( {
 
 let Install = module.exports = mongoose.model( 'install', InstallSchema );
 
-module.exports.createNewIntstall = function ( googleId, newInstallData, callback ) {
+module.exports.createNewInstall = function ( googleId, newInstallData, callback ) {
 
   if ( !newInstallData.install_num ) {
     callback( {
@@ -102,4 +102,50 @@ module.exports.createNewIntstall = function ( googleId, newInstallData, callback
 
   Install.create( newInstallData, callback );
 
+};
+
+
+module.exports.upsert = function( googleId, installData, callback ) {
+
+  if ( !installData.install_num ) {
+    callback( {
+      code: respondToRequest.errorCodes.dataMalformed,
+      message: "Need at least a creating user and install number to create new install.",
+      data: installData
+    } );
+    return;
+  }
+
+  let query = {
+    install_num: installData.install_num
+  };
+
+  let options = {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true
+  };
+
+  Install.findOneAndUpdate( query, installData, options, callback );
+};
+
+
+module.exports.findByInstallNum = function( install_num, callback ) {
+
+  let query = {
+    install_num: install_num
+  };
+
+  Install.findOne( query, callback );
+
+};
+
+
+module.exports.findAllCreatedByUser = function( googleId, callback ) {
+
+  let query = {
+    creator: googleId
+  };
+
+  Install.find( query, callback );
 };
