@@ -7,9 +7,6 @@ let mongoose = require( 'mongoose' );
 
 let app = express();
 
-// Business Logic
-let businessMiddleware = require( './business/middleware' );
-
 // Routers
 let indexRouter = require( './route/index' );
 let apiRouter = require( './route/api' );
@@ -28,8 +25,6 @@ app.use( express.urlencoded( { extended: false } ) );
 app.use( cookieParser() );
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
-app.use( businessMiddleware );
-
 // Connect to the database
 mongoose.Promise  = global.Promise;
 mongoose.connect( 'mongodb://localhost/standard_metering_db' ).then( () => {
@@ -42,7 +37,7 @@ mongoose.connect( 'mongodb://localhost/standard_metering_db' ).then( () => {
 
 } );
 
-app.use( '/', indexRouter );
+// app.use( '/', indexRouter );
 app.use( '/api', apiRouter );
 
 app.use( generalErrorHandler() );

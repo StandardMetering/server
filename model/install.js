@@ -149,3 +149,10 @@ module.exports.findAllCreatedByUser = function( googleId, callback ) {
 
   Install.find( query, callback );
 };
+
+
+module.exports.findAll = function( callback ) {
+
+  Install.find( callback );
+
+};
